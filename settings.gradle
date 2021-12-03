@@ -1,0 +1,10 @@
+rootProject.name = 'system-design-oops'
+
+
+include 'splittwise'
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
