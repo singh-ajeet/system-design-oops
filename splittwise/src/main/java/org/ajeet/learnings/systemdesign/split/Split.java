@@ -1,28 +1,13 @@
 package org.ajeet.learnings.systemdesign.split;
 
-import org.ajeet.learnings.systemdesign.balance.Balance;
-import org.ajeet.learnings.systemdesign.user.User;
+public enum Split {
+    EQUAL(EqualSplitter),
+    EXACT(ExactSplitter),
+    PERCENT(PercentSplitter);
 
-import java.util.List;
+            private final Splitter splitter;
 
-public abstract class Split {
-    protected final User paidBy;
-    protected final User[] users;
-    protected final double amount;
-
-    public Split(User paidBy, User[] users, double amount) {
-        if(users == null || users.length == 0){
-            throw new IllegalArgumentException("users array cant be null or empty.");
-        }
-
-        if(!(amount > 0.0)){
-            throw new IllegalArgumentException("amount must be greater then 0.0");
-        }
-
-        this.paidBy = paidBy;
-        this.users = users;
-        this.amount = amount;
+    Split(Splitter  splitter) {
+        this.splitter = splitter;
     }
-
-    public abstract List<Balance> split();
 }

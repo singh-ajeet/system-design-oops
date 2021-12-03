@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class EqualSplit extends Split {
+public final class EqualSplitter extends Splitter {
 
-    public EqualSplit(User paidBy, User[] users, double amount) {
+    public EqualSplitter(User paidBy, User[] users, double amount) {
         super(paidBy, users, amount);
     }
 
