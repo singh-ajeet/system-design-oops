@@ -4,14 +4,15 @@ import org.ajeet.learnings.systemdesign.balance.Balance;
 import org.ajeet.learnings.systemdesign.user.User;
 
 import java.util.List;
+import java.util.Map;
 
 public abstract class Splitter {
     protected final User paidBy;
-    protected final User[] users;
+    protected final List<User> users;
     protected final double amount;
 
-    public Splitter(User paidBy, User[] users, double amount) {
-        if(users == null || users.length == 0){
+    public Splitter(User paidBy, List<User> users, double amount) {
+        if(users == null || users.size() == 0){
             throw new IllegalArgumentException("users array cant be null or empty.");
         }
 
@@ -24,5 +25,5 @@ public abstract class Splitter {
         this.amount = amount;
     }
 
-    public abstract List<Balance> split();
+    public abstract Map<User, Balance> split();
 }
