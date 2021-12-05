@@ -4,8 +4,7 @@ import com.sun.org.slf4j.internal.Logger;
 import com.sun.org.slf4j.internal.LoggerFactory;
 import org.ajeet.learnings.systemdesign.balance.Balance;
 import org.ajeet.learnings.systemdesign.balance.BalanceSheetRepository;
-import org.ajeet.learnings.systemdesign.split.EqualSplitter;
-import org.ajeet.learnings.systemdesign.split.Splitter;
+import org.ajeet.learnings.systemdesign.split.SplitCommand;
 import org.ajeet.learnings.systemdesign.user.User;
 import org.ajeet.learnings.systemdesign.user.UserRepository;
 
@@ -27,29 +26,24 @@ public final class BalanceManager implements Closeable {
         this.userRepository = userRepository;
     }
 
-    public boolean createExpense(ExpenseRequest expenseRequest) {
-        switch (expenseRequest.getSplitType()){
-            case EQUAL: splitEqually(expenseRequest);
-            break;
-            case EXACT: splitExactly(expenseRequest);
-            break;
-            case PERCENT: splitByPercentage(expenseRequest);
-            break;
-            default: throw new IllegalArgumentException("Invalid split type !!");
-        }
-        return false;
+    public void createExpense(ExpenseRequest expenseRequest) {
+        SplitCommand splitCommand = getSplitCommand(expenseRequest);
+
+        Map<User, Balance> balance = expenseRequest.getSplitType()
+                .getSplitter()
+                .split(splitCommand);
+
+        balanceRepository.updateBalance(balance);
     }
 
-    private void splitEqually(ExpenseRequest expenseRequest) {
+    private SplitCommand getSplitCommand(ExpenseRequest expenseRequest) {
         User user = userRepository.findUserById(expenseRequest.getBillPaidByUserId());
         List<User> usersSharingBill = expenseRequest.getUsersIdsSharingBill()
                 .stream()
                 .map(userId -> findUserById(userId))
                 .collect(Collectors.toList());
 
-        Splitter equalSplitter = new EqualSplitter(user, usersSharingBill, expenseRequest.getAmountPaid());
-        Map<User, Balance> balances = equalSplitter.split();
-        balanceRepository.updateBalance(balances);
+        return new SplitCommand(user,  expenseRequest.getAmountPaid(), usersSharingBill);
     }
 
     public Collection<Balance> listBalance() {

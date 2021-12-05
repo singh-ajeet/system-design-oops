@@ -4,23 +4,26 @@ import org.ajeet.learnings.systemdesign.balance.Balance;
 import org.ajeet.learnings.systemdesign.user.User;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class EqualSplitter extends Splitter {
+    private static final Splitter INSTANCE = new EqualSplitter();
 
-    public EqualSplitter(User paidBy, List<User> users, double amount) {
-        super(paidBy, users, amount);
-    }
+    private EqualSplitter(){}
 
     @Override
-    public Map<User, Balance> split() {
-        double amount = this.amount/ users.size();
+    public Map<User, Balance> split(SplitCommand splitCommand) {
+        double amount = splitCommand.getAmountPaid() / splitCommand.getUsersSharingBill().size();
 
-        return users.stream()
-                .map(user -> new Balance(user, Collections.singletonMap(paidBy,amount)))
+        return  splitCommand.getUsersSharingBill().stream()
+                .map(user -> new Balance(user, Collections.singletonMap(splitCommand.getBillPaidByUserId(),amount)))
                 .collect(Collectors.toMap(Balance::getUser, Function.identity()));
     }
+
+    public static Splitter getInstance(){
+        return INSTANCE;
+    }
+
 }
