@@ -8,3 +8,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+include 'snake-ladder'
+
