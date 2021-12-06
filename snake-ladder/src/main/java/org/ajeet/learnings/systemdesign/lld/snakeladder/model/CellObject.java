@@ -29,6 +29,12 @@ public abstract class CellObject {
         return destination;
     }
 
+    public int moveCell(int position){
+        if (position == getSource())
+            return getDestination();
+        return position;
+    }
+
     public CellObjectType getType() {
         return type;
     }

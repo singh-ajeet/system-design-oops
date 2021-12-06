@@ -13,7 +13,9 @@ public class Ladder extends CellObject {
         super(source, destination, type, properties);
     }
 
+
     public CellObjectType getTYPE() {
         return TYPE;
     }
+
 }

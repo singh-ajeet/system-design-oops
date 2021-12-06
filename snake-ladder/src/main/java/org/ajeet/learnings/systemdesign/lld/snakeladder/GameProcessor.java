@@ -1,6 +1,7 @@
 package org.ajeet.learnings.systemdesign.lld.snakeladder;
 
 import org.ajeet.learnings.systemdesign.lld.snakeladder.model.Board;
+import org.ajeet.learnings.systemdesign.lld.snakeladder.model.CellObject;
 import org.ajeet.learnings.systemdesign.lld.snakeladder.model.Move;
 import org.ajeet.learnings.systemdesign.lld.snakeladder.user.Player;
 
@@ -30,23 +31,34 @@ public class GameProcessor {
             this.playerPositions.put(player, 0);
         }
 
-        this.board = new Board(boardSize);
+        this.board = new Board(ladders, snakes, boardSize);
         winners = new Player[numOfWinners];
     }
 
     public Move move(int moves){
         Player currentPlayer = playerQueue.poll();
-        int currentPosition = playerPositions.get(currentPlayer);
 
         if(!isValidMove(currentPlayer, moves)){
             return null;
         }
 
-        int newPosition = currentPosition + moves;
-        playerPositions.put(currentPlayer, newPosition);
-        playerQueue.offer(currentPlayer);
+        return _move(currentPlayer, moves);
+    }
 
-        return new Move(moves, currentPlayer, currentPosition, newPosition);
+    private Move _move(Player player, int moves) {
+        int currentPosition = playerPositions.get(player);
+        int newPosition = currentPosition;
+
+        CellObject cellObject = board.getCellObject(newPosition);
+        while(board.getCellObject(newPosition) != null){
+            newPosition = cellObject.moveCell( newPosition + moves);
+            cellObject = board.getCellObject(newPosition);
+        }
+
+        playerPositions.put(player, newPosition);
+        playerQueue.offer(player);
+
+        return new Move(moves, player, currentPosition, newPosition);
     }
 
     private boolean isValidMove(Player player, int moves) {
