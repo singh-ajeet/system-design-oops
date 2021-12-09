@@ -22,7 +22,7 @@ public class GameProcessor {
      *
      * @param players
      */
-    public GameProcessor(List<Player> players, int boardSize, int numOfWinners) {
+    public GameProcessor(List<Player> players, Board board, int boardSize, int numOfWinners) {
         this.playerQueue = new ArrayBlockingQueue<Player>(players.size());
         this.playerQueue.addAll(players);
 
@@ -31,7 +31,7 @@ public class GameProcessor {
             this.playerPositions.put(player, 0);
         }
 
-        this.board = new Board(ladders, snakes, boardSize);
+        this.board = board;
         winners = new Player[numOfWinners];
     }
 

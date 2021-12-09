@@ -1,9 +1,9 @@
 package org.ajeet.learnings.systemdesign.lld.snakeladder;
 
-import org.ajeet.learnings.systemdesign.lld.snakeladder.model.DefaultDice;
-import org.ajeet.learnings.systemdesign.lld.snakeladder.model.Move;
+import org.ajeet.learnings.systemdesign.lld.snakeladder.model.*;
 import org.ajeet.learnings.systemdesign.lld.snakeladder.user.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -12,8 +12,8 @@ public final class Game {
     private final DefaultDice dice;
     private AtomicBoolean STOP = new AtomicBoolean(false);
 
-    public Game(List<Player> players, int numOfWinners, int boardSize, DefaultDice dice) {
-        this.gameProcessor = new GameProcessor(players, boardSize, numOfWinners);
+    private Game(List<Player> players, Board board, int numOfWinners, int boardSize, DefaultDice dice) {
+        this.gameProcessor = new GameProcessor(players, board,  boardSize, numOfWinners);
         this.dice = dice;
     }
 
@@ -35,4 +35,64 @@ public final class Game {
         STOP.set(true);
     }
 
+    public static Builder builder(){
+        return new Builder();
+    }
+
+    private static class Builder {
+        private int boardSize;
+        private List<CellObject> snakes = new ArrayList<>();
+        private List<CellObject> ladders = new ArrayList<>();
+        private int numberOfWinners;
+        private List<Player> players;
+
+        public Game build(){
+            Board board = buildBoard();
+            return null;
+        }
+
+        private Board buildBoard() {
+            return null;
+        }
+
+        public Builder withBoardSize(int boardSize){
+            this.boardSize = boardSize;
+            return this;
+        }
+
+        public Builder withSnakes(List<Snake> snakes){
+            this.snakes.addAll(snakes);
+            return this;
+        }
+
+        public Builder withSnake(Snake snake){
+            this.snakes.add(snake);
+            return this;
+        }
+
+        public Builder withLadders(List<Ladder> ladders){
+            this.ladders.addAll(ladders);
+            return this;
+        }
+
+        public Builder withSnakes(Ladder ladder){
+            this.ladders.add(ladder);
+            return this;
+        }
+
+        public Builder withNumOfWinners(int winners){
+            this.numberOfWinners = winners;
+            return this;
+        }
+
+        public Builder withPlayers(List<Player> players){
+            this.players.addAll(players);
+            return this;
+        }
+
+        public Builder withPLayer(Player pLayer){
+            this.players.add(pLayer);
+            return this;
+        }
+    }
 }
